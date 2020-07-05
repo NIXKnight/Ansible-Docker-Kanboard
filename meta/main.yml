@@ -1,0 +1,15 @@
+dependencies: []
+galaxy_info:
+  author: Saad Ali
+  description: Ansible role for deploying Kanboard Docker container using [Docker-Kanboard](https://github.com/NIXKnight/Docker-Kanboard) [Docker image](https://hub.docker.com/r/nixknight/kanboard).
+  license: license (MIT)
+  min_ansible_version: 2.9
+  platforms:
+  - name: Debian
+    versions:
+      - buster
+  - name: Ubuntu
+    versions:
+      - bionic
+  galaxy_tags:
+    - kanboard
