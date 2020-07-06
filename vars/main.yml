@@ -1,0 +1,5 @@
+---
+# defaults file for Ansible-Docker-Kanboard
+docker_kanboard_exposed_port: "9000"
+docker_kanboard_data_mount_point: "/var/www/kanboard/data"
+docker_kanboard_plugins_mount_point: "/var/www/kanboard/plugins"

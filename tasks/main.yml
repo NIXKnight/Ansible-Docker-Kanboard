@@ -1,2 +1,81 @@
 ---
 # tasks file for Ansible-Docker-Kanboard
+- name: Check if Kanboard Container is Running
+  docker_container_info:
+    name: "{{ DOCKER_KANBOARD_CONTAINER_NAME }}"
+  register: docker_kanboard_container
+  tags:
+    - "install"
+    - "update"
+
+- name: Check if Kanboard Data Volume Exists
+  docker_volume_info:
+    name: "{{ DOCKER_KANBOARD_DATA_VOLUME_NAME }}"
+  register: docker_kanboard_data_volume
+  tags:
+    - "install"
+
+- name: Check if Kanboard Plugins Volume Exists
+  docker_volume_info:
+    name: "{{ DOCKER_KANBOARD_PLUGINS_VOLUME_NAME }}"
+  register: docker_kanboard_plugins_volume
+  tags:
+    - "install"
+
+- name: Stop and Remove Kanboard Container
+  docker_container:
+    name: "{{ DOCKER_KANBOARD_CONTAINER_NAME }}"
+    state: "absent"
+  when: docker_kanboard_container.exists
+  tags:
+    - "install"
+    - "update"
+
+- name: Create Kanboard Data Docker Volume
+  docker_volume:
+    name: "{{ DOCKER_KANBOARD_DATA_VOLUME_NAME }}"
+  when: not docker_kanboard_data_volume.exists
+  tags:
+    - "install"
+
+- name: Create Kanboard Plugins Docker Volume
+  docker_volume:
+    name: "{{ DOCKER_KANBOARD_PLUGINS_VOLUME_NAME }}"
+  when: not docker_kanboard_plugins_volume.exists
+  tags:
+    - "install"
+
+- name: Pull Kanboard Version {{ DOCKER_KANBOARD_IMAGE_VERSION }} Docker Image
+  docker_image:
+    name: "{{ DOCKER_KANBOARD_IMAGE_VERSION }}"
+    source: pull
+  tags:
+    - "install"
+    - "update"
+
+- name: Start Kanboard Docker Container
+  docker_container:
+    name: "{{ DOCKER_KANBOARD_CONTAINER_NAME }}"
+    image: "{{ DOCKER_KANBOARD_IMAGE_VERSION }}"
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "{{ DOCKER_KANBOARD_HOST_PORT_MAPPING }}:{{ docker_kanboard_exposed_port }}"
+    volumes:
+      - "{{ DOCKER_KANBOARD_DATA_VOLUME_NAME }}:{{ docker_kanboard_data_mount_point }}"
+      - "{{ DOCKER_KANBOARD_PLUGINS_VOLUME_NAME }}:{{ docker_kanboard_plugins_mount_point }}"
+    env:
+      DB_DRIVER: "{{ DOCKER_KANBOARD_DB_DRIVER }}"
+      DB_USERNAME: "{{ DOCKER_KANBOARD_DB_USERNAME }}"
+      DB_PASSWORD: "{{ DOCKER_KANBOARD_DB_PASSWORD }}"
+      DB_NAME: "{{ DOCKER_KANBOARD_DB_NAME }}"
+      DB_PORT: "{{ DOCKER_KANBOARD_DB_PORT }}"
+      MAIL_SMTP_HOSTNAME: "{{ DOCKER_KANBOARD_MAIL_SMTP_HOSTNAME }}"
+      MAIL_SMTP_PORT: "{{ DOCKER_KANBOARD_MAIL_SMTP_PORT }}"
+      MAIL_SMTP_USERNAME: "{{ DOCKER_KANBOARD_MAIL_SMTP_USERNAME }}"
+      MAIL_SMTP_PASSWORD: "{{ DOCKER_KANBOARD_MAIL_SMTP_PASSWORD }}"
+      MAIL_SMTP_ENCRYPTION: "{{ DOCKER_KANBOARD_MAIL_SMTP_ENCRYPTION }}"
+      MAIL_FROM: "{{ DOCKER_KANBOARD_MAIL_FROM }}"
+  tags:
+    - "install"
+    - "update"
