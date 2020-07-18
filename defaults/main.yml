@@ -1,6 +1,6 @@
 ---
 # defaults file for Ansible-Docker-Kanboard
-DOCKER_KANBOARD_IMAGE_VERSION: "latest"
+DOCKER_KANBOARD_IMAGE_VERSION: "nixknight/kanboard:latest"
 DOCKER_KANBOARD_HOST_PORT_MAPPING: "127.0.0.1:9000"
 DOCKER_KANBOARD_CONTAINER_NAME: "kanboard"
 DOCKER_KANBOARD_DATA_VOLUME_NAME: "kanboard_data"
