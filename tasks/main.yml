@@ -79,3 +79,23 @@
   tags:
     - "install"
     - "update"
+
+- name: Add Kanboard NGINX Server Block
+  template:
+    src: "templates/etc/nginx/sites-available/kanboard.conf.j2"
+    dest: "/etc/nginx/sites-available/kanboard.conf"
+  when: ansible_os_family == 'Debian'
+  tags:
+    - "install"
+    - "configure"
+
+- name: Enable Kanboard NGINX Server Block
+  file:
+    src: "/etc/nginx/sites-available/kanboard.conf"
+    dest: "/etc/nginx/sites-enabled/kanboard.conf"
+    state: link
+  when: ansible_os_family == 'Debian'
+  notify: Restart NGINX
+  tags:
+    - "install"
+    - "configure"
