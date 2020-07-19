@@ -4,12 +4,16 @@ upstream kanboard_unit_upstream {
 
 server {
   listen {{ DOCKER_KANBOARD_NGINX_PORT }};
+  server_name {{ DOCKER_KANBOARD_DOMAIN_NAME }};
+
 {% if DOCKER_KANBOARD_NGINX_ENABLE_SSL %}
   listen {{ DOCKER_KANBOARD_SSL_NGINX_PORT }} ssl;
   ssl_certificate {{ DOCKER_KANBOARD_NGINX_SSL_CERTIFICATE_FILE }};
   ssl_certificate_key {{ DOCKER_KANBOARD_NGINX_SSL_KEY_FILE }};
+
+  if ($scheme != "https") { set $redirect_to_https "true"; }
+  if ($redirect_to_https = "true") { return 301 https://$host$request_uri; }
 {% endif %}
-  server_name {{ DOCKER_KANBOARD_DOMAIN_NAME }};
 
   location / {
     try_files $uri @kanboard;
