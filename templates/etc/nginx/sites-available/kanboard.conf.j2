@@ -8,6 +8,8 @@ server {
 
 {% if DOCKER_KANBOARD_NGINX_ENABLE_SSL %}
   listen {{ DOCKER_KANBOARD_NGINX_SSL_PORT }} ssl;
+  ssl_stapling on;
+  ssl_stapling_verify on;
   ssl_certificate {{ DOCKER_KANBOARD_NGINX_SSL_CERTIFICATE_FILE }};
   ssl_certificate_key {{ DOCKER_KANBOARD_NGINX_SSL_KEY_FILE }};
 
