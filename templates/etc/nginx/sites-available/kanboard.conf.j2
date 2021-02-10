@@ -7,7 +7,7 @@ server {
   server_name {{ DOCKER_KANBOARD_DOMAIN_NAME }};
 
 {% if DOCKER_KANBOARD_NGINX_ENABLE_SSL %}
-  listen {{ DOCKER_KANBOARD_SSL_NGINX_PORT }} ssl;
+  listen {{ DOCKER_KANBOARD_NGINX_SSL_PORT }} ssl;
   ssl_certificate {{ DOCKER_KANBOARD_NGINX_SSL_CERTIFICATE_FILE }};
   ssl_certificate_key {{ DOCKER_KANBOARD_NGINX_SSL_KEY_FILE }};
 
